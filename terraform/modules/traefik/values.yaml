@@ -1,0 +1,47 @@
+service:
+  type: NodePort
+  spec:
+    externalTrafficPolicy: Cluster
+
+deployment:
+  replicas: 2
+
+ports:
+  web:
+    nodePort: ${port_web}
+  websecure:
+    nodePort: ${port_websecure}
+  adm:
+    port: 8080
+    expose: true
+    protocol: TCP
+    nodePort: 31080
+
+additionalArguments:
+  - --entrypoints.websecure.http.tls=true
+  - --entryPoints.adm.forwardedHeaders.insecure
+  - --entrypoints.web.http.redirections.entryPoint.to=websecure
+  - --entrypoints.web.http.redirections.entryPoint.scheme=https
+  - --metrics=true
+  - --metrics.prometheus=true
+  - --metrics.prometheus.addEntryPointsLabels=true
+  - --metrics.prometheus.addServicesLabels=true
+  - --serversTransport.insecureSkipVerify=true
+  - --accesslog=true
+  - --accesslog.format=json
+  - --accesslog.filters.statuscodes=400-599
+  - --accesslog.fields.headers.defaultmode=redact
+  - --entryPoints.web.proxyProtocol.insecure
+  - --entryPoints.websecure.proxyProtocol.insecure
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 100m
+    memory: 256Mi
