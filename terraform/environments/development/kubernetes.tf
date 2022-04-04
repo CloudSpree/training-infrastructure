@@ -15,6 +15,14 @@ module "argo_rollouts" {
   source = "../../modules/argo_rollouts"
 }
 
+module "prometheus" {
+  source = "../../modules/prometheus"
+
+  depends_on = [
+    module.traefik
+  ]
+}
+
 resource "kubernetes_namespace" "staging" {
   metadata {
     name = "staging"
