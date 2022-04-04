@@ -7,4 +7,5 @@ locals {
 
 inputs = {
   do_token = local.secrets.digital_ocean.token
+  lightstep_token = local.secrets.lightstep.token
 }

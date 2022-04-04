@@ -60,3 +60,23 @@ resource "kubernetes_secret" "docker_credentials_production" {
 
   type = "kubernetes.io/dockerconfigjson"
 }
+
+resource "kubernetes_secret" "lightstep_staging" {
+  metadata {
+    name      = "lightstep-token"
+    namespace = kubernetes_namespace.staging.metadata[0].name
+  }
+  data = {
+    LIGHTSTEP_TOKEN = base64encode(var.lightstep_token)
+  }
+}
+
+resource "kubernetes_secret" "lightstep_production" {
+  metadata {
+    name      = "lightstep-token"
+    namespace = kubernetes_namespace.production.metadata[0].name
+  }
+  data = {
+    LIGHTSTEP_TOKEN = base64encode(var.lightstep_token)
+  }
+}

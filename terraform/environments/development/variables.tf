@@ -11,3 +11,7 @@ variable "region" {
 variable "do_token" {
   type = string
 }
+
+variable "lightstep_token" {
+  type = string
+}
