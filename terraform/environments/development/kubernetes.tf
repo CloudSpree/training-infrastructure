@@ -11,6 +11,10 @@ module "argocd" {
   ]
 }
 
+module "argo_rollouts" {
+  source = "../../modules/argo_rollouts"
+}
+
 resource "kubernetes_namespace" "staging" {
   metadata {
     name = "staging"
