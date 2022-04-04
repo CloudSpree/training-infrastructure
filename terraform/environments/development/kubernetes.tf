@@ -80,3 +80,25 @@ resource "kubernetes_secret" "lightstep_production" {
     LIGHTSTEP_TOKEN = base64encode(var.lightstep_token)
   }
 }
+
+resource "kubernetes_config_map" "environment_commin_staging" {
+  metadata {
+    name      = "environment-common"
+    namespace = kubernetes_namespace.staging.metadata[0].name
+  }
+
+  data = {
+    ENVIRONMENT_NAME = kubernetes_namespace.staging.metadata[0].name
+  }
+}
+
+resource "kubernetes_config_map" "environment_commin_production" {
+  metadata {
+    name      = "environment-common"
+    namespace = kubernetes_namespace.production.metadata[0].name
+  }
+
+  data = {
+    ENVIRONMENT_NAME = kubernetes_namespace.production.metadata[0].name
+  }
+}
