@@ -10,3 +10,41 @@ module "argocd" {
     module.traefik
   ]
 }
+
+resource "kubernetes_namespace" "staging" {
+  metadata {
+    name = "staging"
+  }
+}
+
+resource "kubernetes_namespace" "production" {
+  metadata {
+    name = "production"
+  }
+}
+
+resource "kubernetes_secret" "docker_credentials_staging" {
+  metadata {
+    name      = "docker-cfg"
+    namespace = kubernetes_namespace.staging.metadata[0].name
+  }
+
+  data = {
+    ".dockerconfigjson" = digitalocean_container_registry_docker_credentials.this.docker_credentials
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+}
+
+resource "kubernetes_secret" "docker_credentials_production" {
+  metadata {
+    name      = "docker-cfg"
+    namespace = kubernetes_namespace.production.metadata[0].name
+  }
+
+  data = {
+    ".dockerconfigjson" = digitalocean_container_registry_docker_credentials.this.docker_credentials
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+}
